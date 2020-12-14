@@ -3,6 +3,7 @@
 #include "doc.hpp"
 #include "notnull.hpp"
 #include "str_utils.hpp"
+#include <compsky/deasciify/a2n.hpp>
 
 
 Doc::Doc(Parser& parser,  const char* html,  const size_t html_sz)

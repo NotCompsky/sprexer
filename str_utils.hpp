@@ -13,43 +13,63 @@ Char* after_next_char(Char* str,  const char c){
 }
 
 template<typename Char>
-bool streq(const char* a,  Char* b){
-	/*
-	 * Compares the script-given string (a) to the HTML-given string (b)
-	 */
-	if (a == nullptr)
-		return true;
-	if (b == nullptr)
-		return false;
-	while(true){
-		if (*a != *b)
-			return false;
-		if (*a == 0)
-			return true;
-		++a;
-		++b;
-	}
+constexpr
+char at(Char* str,  const unsigned i){
+	return str[i];
 }
 
-
-template<char terminator = 0>
 constexpr
-bool streq(const char* a,  const std::string_view v){
-	unsigned length_to_compare = v.size();
-	const char* b = v.data();
-	//printf("streq\n  1 %s\n  2 %s\n", a, b); fflush(stdout);
-	if (a == nullptr)
+char at(const std::string_view v,  const unsigned i){
+	return v.at(i);
+}
+
+template<typename Char>
+constexpr
+bool is_null(Char* str){
+	return (str == nullptr);
+}
+
+constexpr
+bool is_null(const std::string_view){
+	return false;
+}
+
+template<typename Char>
+constexpr
+size_t len(Char* str){
+	return std::char_traits<char>::length(str);
+}
+
+constexpr
+size_t len(const std::string_view v){
+	return v.size();
+}
+
+template<char terminator = 0,  typename Str>
+constexpr
+bool streq(const char* a,  Str const b){
+	/*
+	 * Compares the script-given string (a) to the HTML-given string (b)
+	 * (a) definitely ends in a null byte
+	 */
+	if (is_null(a))
 		return true;
-	if (b == nullptr)
+	if (is_null(b))
 		return false;
-	while(length_to_compare){
-		if (*a != *b)
-			return false;
-		++a;
-		++b;
-		--length_to_compare;
+	const size_t b_len = len(b);
+	if (b_len == 0){
+		return (a[0] == 0);
 	}
-	return (*b == terminator);
+	for (size_t i = 0;  i < b_len;  ++i){
+		const char _b = at(b, i);
+		if (a[i] == 0){
+			return (i == b_len - 1) or (_b == terminator);
+		}
+		if (_b != a[i])
+			return false;
+	}
+	// If here, (a) has a prefix of (b)
+	return (a[b_len] == 0);
 }
 
 static_assert(streq<' '>("foo bar", "foo"));
@@ -61,26 +81,25 @@ static_assert(not streq<' '>(" foo  bar", "foo"));
 
 constexpr
 bool streq_up_to_space(const char* const a,  const std::string_view v){
-	if (a == nullptr)
+	if (is_null(a))
 		return true;
 	unsigned length_to_compare = v.size();
 	const char* b = v.data();
 	if (b == nullptr)
 		return false;
-	while(true){
+	while(length_to_compare){
 		if (streq<' '>(a, std::string_view(b, length_to_compare)))
 			return true;
-		while((*b != 0) and (*b != ' ')){
+		while((*b != 0) and (*b != ' ') and length_to_compare){
 			++b;
 			--length_to_compare;
 		}
-		while(*b == ' '){
+		while((*b == ' ') and length_to_compare){
 			++b;
 			--length_to_compare;
 		}
-		if (*b == 0)
-			return false;
 	}
+	return false;
 }
 
 

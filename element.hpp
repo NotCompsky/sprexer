@@ -24,6 +24,7 @@ class Element {
 	bool has_attr(const char* const attr_name,  const char* const attr_val) const;
 	bool has_class_name(const char* const class_name) const;
 	
+	std::string_view get_tag_name() const;
 	std::string_view get_inner_text() const;
 	std::string_view get_attr(const char* const name) const;
 	std::string_view get_value(const char* const name) const;

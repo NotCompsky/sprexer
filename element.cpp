@@ -13,6 +13,13 @@ Element::Element(lxb_dom_node_t* node)
 {}
 
 
+std::string_view Element::get_tag_name() const {
+	size_t len = 0;
+	const char* const name = reinterpret_cast<const char*>(lxb_dom_element_qualified_name(this->element, &len));
+	return std::string_view(name, len);
+}
+
+
 bool Element::is_null() const {
 	return this->element == nullptr;
 }
@@ -22,9 +29,7 @@ bool Element::has_id(const char* const id) const {
 		return true;
 	if (this->element->node.type != LXB_DOM_NODE_TYPE_ELEMENT)
 		return false;
-	size_t len = 0;
-	const char* const actual_id = reinterpret_cast<const char*>(lxb_dom_element_get_attribute(this->element, (const lxb_char_t*)"id", 2, &len));
-	return streq(id, actual_id, len);
+	return streq(id, this->get_attr("id"));
 }
 
 bool Element::has_tag_name(const char* const tag_name) const {
@@ -32,9 +37,7 @@ bool Element::has_tag_name(const char* const tag_name) const {
 		return true;
 	if (this->element->node.type != LXB_DOM_NODE_TYPE_ELEMENT)
 		return false;
-	size_t len = 0;
-	const char* const actual_tag_name = reinterpret_cast<const char*>(lxb_dom_element_qualified_name(this->element, &len));
-	return streq(tag_name, actual_tag_name, len);
+	return streq(tag_name, this->get_tag_name());
 }
 
 bool Element::has_attr(const char* const attr_name,  const char* const attr_val) const {
@@ -42,20 +45,16 @@ bool Element::has_attr(const char* const attr_name,  const char* const attr_val)
 		return true;
 	if (this->element->node.type != LXB_DOM_NODE_TYPE_ELEMENT)
 		return false;
-	size_t len = 0;
-	const char* const actual_val = reinterpret_cast<const char*>(lxb_dom_element_get_attribute(this->element, (const lxb_char_t*)attr_name, strlen(attr_name), &len));
-	if (actual_val == nullptr)
+	const std::string_view actual_val = this->get_attr(attr_name);
+	if (actual_val.empty())
 		return false;
-	return ((attr_val == nullptr) or streq(attr_val, actual_val, len));
+	return ((attr_val == nullptr) or streq(attr_val, actual_val));
 }
 
 bool Element::has_class_name(const char* const class_name) const {
 	if (class_name == nullptr)
 		return true;
-	size_t len = 0;
-	const char* const actual_class_name = reinterpret_cast<const char*>(lxb_dom_element_get_attribute(this->element, (const lxb_char_t*)"class", 5, &len));
-	// TODO: Account for whitespace
-	return streq(class_name, actual_class_name, len);
+	return streq_up_to_space(class_name, this->get_attr("class"));
 }
 
 std::string_view Element::get_inner_text() const {
