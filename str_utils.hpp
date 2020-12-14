@@ -1,4 +1,7 @@
 #pragma once
+#ifdef ASSERT_STR_UTILS
+# include <cassert>
+#endif
 
 
 template<typename Char>
@@ -72,11 +75,6 @@ bool streq(const char* a,  Str const b){
 	return (a[b_len] == 0);
 }
 
-static_assert(streq<' '>("foo bar", "foo"));
-static_assert(streq<' '>("foo  bar", "foo"));
-static_assert(not streq<' '>("foo  bar", "bar"));
-static_assert(not streq<' '>(" foo  bar", "foo"));
-
 
 
 constexpr
@@ -103,9 +101,43 @@ bool streq_up_to_space(const char* const a,  const std::string_view v){
 }
 
 
-static_assert(streq_up_to_space("foo bar", "foo"));
-static_assert(streq_up_to_space("foo  bar", "foo"));
-static_assert(streq_up_to_space("foo bar", "bar"));
-static_assert(streq_up_to_space("foo  bar", "bar"));
-static_assert(streq_up_to_space(" foo  bar", "foo"));
-static_assert(streq_up_to_space(" foo  bar ree", "bar"));
+#ifdef ASSERT_STR_UTILS
+// Left is the specified string, right is the HTML string
+assert(streq<' '>("", ""));
+assert(not streq<' '>("", "foo"));
+assert(not streq<' '>("foo", ""));
+assert(streq<' '>("foo bar", "foo bar"));
+assert(streq<' '>("foo", "foo bar"));
+assert(streq<' '>("foo", "foo  bar"));
+assert(not streq<' '>("bar", "foo  bar"));
+assert(not streq<' '>("foo", " foo  bar"));
+assert(not streq<' '>("foo bar", "foo"));
+assert(not streq<' '>("foo  bar", "foo"));
+assert(not streq<' '>("foo  bar", "bar"));
+assert(not streq<' '>(" foo  bar", "foo"));
+
+assert(streq<' '>("", std::string_view("")));
+assert(not streq<' '>("", std::string_view("foo")));
+assert(not streq<' '>("foo", std::string_view("")));
+assert(streq<' '>("foo bar", std::string_view("foo bar")));
+assert(streq<' '>("foo", std::string_view("foo bar")));
+assert(streq<' '>("foo", std::string_view("foo  bar")));
+assert(not streq<' '>("bar", std::string_view("foo  bar")));
+assert(not streq<' '>("foo", std::string_view(" foo  bar")));
+assert(not streq<' '>("foo bar", std::string_view("foo")));
+assert(not streq<' '>("foo  bar", std::string_view("foo")));
+assert(not streq<' '>("foo  bar", std::string_view("bar")));
+assert(not streq<' '>(" foo  bar", std::string_view("foo")));
+
+assert(not streq_up_to_space("", "foo"));
+assert(not streq_up_to_space("foo", ""));
+assert(streq_up_to_space("foo bar", "foo bar"));
+assert(streq_up_to_space("foo", "foo bar"));
+assert(streq_up_to_space("foo", "foo  bar"));
+assert(streq_up_to_space("bar", "foo  bar"));
+assert(streq_up_to_space("foo", " foo  bar"));
+assert(not streq_up_to_space("foo bar", "foo"));
+assert(not streq_up_to_space("foo  bar", "foo"));
+assert(not streq_up_to_space("foo  bar", "bar"));
+assert(not streq_up_to_space(" foo  bar", "foo"));
+#endif
