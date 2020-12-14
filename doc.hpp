@@ -6,6 +6,9 @@
 #include <compsky/deasciify/a2n.hpp>
 
 
+namespace sprexer {
+
+
 Doc::Doc(Parser& parser,  const char* html,  const size_t html_sz)
 : document(parser.parse(html, html_sz))
 {
@@ -102,3 +105,6 @@ lxb_dom_element_t* Doc::get_element_from_class_selector_path(char* selector_path
 	}
 	return element;
 }
+
+
+} // namespace sprexer

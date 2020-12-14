@@ -5,6 +5,9 @@ extern "C" {
 }
 
 
+namespace sprexer {
+
+
 class Parser {
  public:
 	lxb_html_parser_t parser;
@@ -13,3 +16,6 @@ class Parser {
 	
 	lxb_html_document_t* parse(const char* html,  const size_t html_sz);
 };
+
+
+}

@@ -4,6 +4,9 @@
 #include "element.hpp"
 
 
+namespace sprexer {
+
+
 template<size_t n_elements>
 Collection<n_elements>::Collection()
 {
@@ -47,3 +50,6 @@ void Collection<n_elements>::filter_for_elements_with_tag_name(const char* const
 		}
 	}
 }
+
+
+} // namespace sprexer

@@ -4,6 +4,9 @@
 #include "nullstr.hpp"
 
 
+namespace sprexer {
+
+
 Element::Element(lxb_dom_element_t* _el)
 : element(_el)
 {}
@@ -160,3 +163,6 @@ lxb_dom_element_t* Element::get_direct_child_element_given_tag_class_attr_indx(c
 	}
 	return node ? lxb_dom_interface_element(node) : nullptr;
 }
+
+
+} // namespace sprexer

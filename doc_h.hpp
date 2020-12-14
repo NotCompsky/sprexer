@@ -6,6 +6,9 @@ extern "C" {
 #include "parser.hpp"
 
 
+namespace sprexer {
+
+
 template<size_t n_elements>
 class Collection;
 
@@ -25,3 +28,6 @@ class Doc {
 	
 	lxb_dom_element_t* get_element_from_class_selector_path(char* selector_path) const;
 };
+
+
+} // namespace sprexer

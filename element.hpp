@@ -7,6 +7,9 @@ extern "C" {
 #include <string_view>
 
 
+namespace sprexer {
+
+
 class Element {
   public:
 	lxb_dom_element_t* const element;
@@ -62,3 +65,6 @@ template<size_t n_elements>
 bool Element::get_elements_of_class_name(Collection<n_elements>& collection,  const char* name) const {
 	return (lxb_dom_elements_by_class_name(this->element, &collection.collection, reinterpret_cast<const lxb_char_t*>(name), strlen(name)) != LXB_STATUS_OK);
 }
+
+
+} // namespace sprexer

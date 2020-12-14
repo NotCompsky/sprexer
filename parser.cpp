@@ -2,6 +2,9 @@
 #include <stdexcept>
 
 
+namespace sprexer {
+
+
 Parser::Parser()
 {
 	if (lxb_html_parser_init(&this->parser) != LXB_STATUS_OK)
@@ -11,3 +14,6 @@ Parser::Parser()
 lxb_html_document_t* Parser::parse(const char* html,  const size_t html_sz){
 	return lxb_html_parse(&this->parser, reinterpret_cast<const lxb_char_t*>(html), html_sz);
 }
+
+
+} // namespace sprexer

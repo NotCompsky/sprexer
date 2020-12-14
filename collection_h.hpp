@@ -6,6 +6,9 @@ extern "C" {
 #include "doc_h.hpp"
 
 
+namespace sprexer {
+
+
 template<size_t n_elements>
 class Collection {
   private:
@@ -22,3 +25,6 @@ class Collection {
 	
 	void filter_for_elements_with_tag_name(const char* const tag_name);
 };
+
+
+} // namespace sprexer
