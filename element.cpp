@@ -2,6 +2,7 @@
 #include "collection_h.hpp"
 #include "str_utils.hpp"
 #include "nullstr.hpp"
+#include <compsky/os/write.hpp>
 
 
 namespace sprexer {
@@ -100,7 +101,7 @@ void Element::print_tag_name() const {
 			tag_name = "[not a node or text]";
 			len = 20;
 	}
-	printf("%.*s\n", (int)len, tag_name);
+	compsky::os::write_n_bytes(STDOUT_FILE_ID, tag_name, len);
 }
 
 bool Element::to_str(char* buf,  size_t& buf_sz) const {
@@ -117,7 +118,7 @@ void Element::print() const {
 	char buf[1000];
 	size_t buf_len = sizeof(buf)-1;
 	this->to_str(buf, buf_len);
-	printf("%.*s\n", (int)buf_len, buf);
+	compsky::os::write_n_bytes(STDOUT_FILE_ID, buf, buf_len);
 }
 
 lxb_dom_element_t* Element::get_element_given_tag_class_attr_indx(const char* id_name,  const char* tag_name,  const char* class_name,  const char* attr_name,  const char* attr_val,  unsigned indx) const {
